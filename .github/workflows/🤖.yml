@@ -1,0 +1,26 @@
+name: Ethereum Gas Prices Stream
+
+on:
+  schedule:
+    - cron: '* * * * *'
+
+jobs:
+  yarn-start:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+
+      - name: Set Node.js
+        uses: actions/setup-node@master
+        with:
+          node-version: 14.x
+
+      - name: Yarn Start
+        env:
+          ETHERSCAN_API_KEY: ${{ secrets.ETHERSCAN_API_KEY }}
+          STREAMR_SESSION_TOKEN: ${{ secrets.STREAMR_SESSION_TOKEN }}
+          STREAMR_STREAM_ID: ${{ secrets.STREAMR_STREAM_ID }}
+        run: yarn start
