@@ -26,17 +26,22 @@ const fetchEtherscanApi = async () => {
 const prepareStreamEvent = response => {
     return new Promise( (resolve, reject) => {
         const data = {}
-        const json = JSON.parse(response)
 
-        if (json.message !== 'OK') {
-            return reject(new Error('Response not OK'))
+        try {
+            const json = JSON.parse(response)
+
+            if (json.message !== 'OK') {
+                return reject(new Error('Response not OK'))
+            }
+
+            for (const [key, value] of Object.entries(json.result)) {
+                data[key] = parseInt(value.toString(), 10)
+            }
+
+            return resolve(data)
+        } catch(error) {
+            return reject(new Error(error.message))
         }
-
-        for (const [key, value] of Object.entries(json.result)) {
-            data[key] = parseInt(value.toString(), 10)
-        }
-
-        return resolve(data)
     })
 }
 
